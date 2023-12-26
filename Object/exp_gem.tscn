@@ -1,0 +1,69 @@
+[gd_scene load_steps=5 format=3 uid="uid://05ae5fd4gsso"]
+
+[ext_resource type="Texture2D" uid="uid://cdufig4nrid8d" path="res://Player/Attack/attack_sprites/candy.png" id="1_nmp1j"]
+[ext_resource type="AudioStream" uid="uid://cfssi6wfqc2v8" path="res://Sound/biteSound.mp3" id="2_wv7tr"]
+
+[sub_resource type="GDScript" id="GDScript_w88b4"]
+script/source = "extends Area2D
+
+@export var experience = 1
+
+var sprite_candy = preload(\"res://Player/Attack/attack_sprites/candy.png\")
+var sprite_cookie = preload(\"res://Player/Attack/attack_sprites/cookie.png\")
+var sprite_gift = preload(\"res://Player/Attack/attack_sprites/giftBox.png\")
+
+var target = null
+var speed = -1
+
+@onready var sprite = $Sprite2D
+@onready var collision = $CollisionShape2D
+@onready var snd = $snd_collected
+
+func _ready():
+	if experience < 5:
+		sprite.texture = sprite_candy
+	elif experience < 25:
+		sprite.texture = sprite_cookie
+	else:
+		sprite.texture = sprite_gift
+		
+func _physics_process(delta):
+	if target != null:
+		global_position = global_position.move_toward(target.global_position, speed)
+		speed += 2 * delta
+	
+func collect():
+	snd.play()
+	collision.call_deferred(\"set\", \"disabled\", true)
+	sprite.visible = false
+	return experience
+
+func _on_snd_collected_finished():
+	queue_free()
+"
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ie1f4"]
+size = Vector2(16, 21)
+
+[node name="ExpGem" type="Area2D" groups=["loot"]]
+position = Vector2(-2, -5)
+collision_layer = 8
+collision_mask = 0
+script = SubResource("GDScript_w88b4")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, 5)
+scale = Vector2(0.04, 0.04)
+texture = ExtResource("1_nmp1j")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+top_level = true
+position = Vector2(0, -0.5)
+shape = SubResource("RectangleShape2D_ie1f4")
+
+[node name="snd_collected" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_wv7tr")
+volume_db = -10.0
+pitch_scale = 1.5
+
+[connection signal="finished" from="snd_collected" to="." method="_on_snd_collected_finished"]

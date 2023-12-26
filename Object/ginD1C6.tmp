@@ -1,0 +1,27 @@
+[gd_scene load_steps=5 format=3 uid="uid://bploc8c1y8rl0"]
+
+[ext_resource type="Script" path="res://Object/gingerbread.gd" id="1_tvauk"]
+[ext_resource type="Texture2D" uid="uid://3irlieabaj44" path="res://GUI/Items/gingerbread.png" id="1_vq0i7"]
+[ext_resource type="AudioStream" uid="uid://cfssi6wfqc2v8" path="res://Sound/biteSound.mp3" id="2_uy5pr"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_2emh1"]
+size = Vector2(20, 23)
+
+[node name="Gingerbread" type="Area2D" groups=["loot"]]
+collision_layer = 8
+collision_mask = 0
+script = ExtResource("1_tvauk")
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture = ExtResource("1_vq0i7")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(0, 0.5)
+shape = SubResource("RectangleShape2D_2emh1")
+
+[node name="snd_collected" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("2_uy5pr")
+volume_db = -10.0
+pitch_scale = 1.5
+
+[connection signal="finished" from="snd_collected" to="." method="_on_snd_collected_finished"]
