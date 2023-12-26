@@ -1,0 +1,103 @@
+[gd_scene load_steps=15 format=3 uid="uid://ctn0fvf10ibr3"]
+
+[ext_resource type="Script" path="res://Enemy/magic_ball.gd" id="1_o7j74"]
+[ext_resource type="Texture2D" uid="uid://brd1aqfbrfdsm" path="res://Enemy/enemey_sprites/magicBall.png" id="2_3j23a"]
+[ext_resource type="PackedScene" uid="uid://c6ango5v6ufdx" path="res://Utility/hit_box.tscn" id="3_hlcjt"]
+[ext_resource type="AudioStream" uid="uid://dxl3ta0qiciu1" path="res://Sound/laserName.mp3" id="4_7kau2"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_64yiy"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_80kx3"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(0, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_g2i1f"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(15, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3xwgv"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(30, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1pl2m"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(45, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o2hmc"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(60, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_fheno"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(75, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_emxx3"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(90, 0, 15, 14)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_cmh7b"]
+atlas = ExtResource("2_3j23a")
+region = Rect2(105, 0, 15, 14)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_kpxkq"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_80kx3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_g2i1f")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3xwgv")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1pl2m")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o2hmc")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_fheno")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_emxx3")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_cmh7b")
+}],
+"loop": true,
+"name": &"shoot",
+"speed": 15.0
+}]
+
+[node name="MagicBall" type="Area2D" groups=["attack"]]
+top_level = true
+scale = Vector2(0.1, 0.1)
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_o7j74")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(1.43051e-06, -1.90735e-06)
+shape = SubResource("RectangleShape2D_64yiy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_kpxkq")
+animation = &"shoot"
+frame_progress = 0.588723
+
+[node name="Timer" type="Timer" parent="."]
+wait_time = 15.0
+one_shot = true
+autostart = true
+
+[node name="HitBox" parent="." instance=ExtResource("3_hlcjt")]
+
+[node name="sndAttack" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("4_7kau2")
+volume_db = -25.0
+pitch_scale = 1.5
+
+[connection signal="hurt" from="." to="." method="_on_hurt"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

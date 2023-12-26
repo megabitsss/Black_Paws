@@ -1,0 +1,115 @@
+[gd_scene load_steps=12 format=3 uid="uid://c07lwhck7hlad"]
+
+[ext_resource type="Script" path="res://Enemy/enemy.gd" id="1_p11ot"]
+[ext_resource type="Texture2D" uid="uid://bt4i78vabdfa4" path="res://Enemy/Ratfolk Axe Sprite Sheet.png" id="2_iwfgu"]
+[ext_resource type="PackedScene" uid="uid://cba13sump0qlj" path="res://Utility/hurt_box.tscn" id="3_36ivu"]
+[ext_resource type="PackedScene" uid="uid://c6ango5v6ufdx" path="res://Utility/hit_box.tscn" id="4_pwhmg"]
+[ext_resource type="AudioStream" uid="uid://ddax7tmqqapp" path="res://Sound/enemyHit.mp3" id="5_oucek"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1vkcq"]
+height = 32.0
+
+[sub_resource type="Animation" id="Animation_w24ys"]
+resource_name = "idle"
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [12]
+}
+
+[sub_resource type="Animation" id="Animation_flodw"]
+resource_name = "walking"
+length = 0.5
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1),
+"update": 1,
+"values": [13, 14, 15, 16, 17]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fo3xi"]
+_data = {
+"idle": SubResource("Animation_w24ys"),
+"walking": SubResource("Animation_flodw")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i6wvv"]
+size = Vector2(31, 44)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3efym"]
+size = Vector2(24, 39)
+
+[node name="enemy_rat" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
+motion_mode = 1
+script = ExtResource("1_p11ot")
+movement_speed = 26.0
+hp = 30
+experience = 10
+enemy_damage = 2
+knockback_recovery = 4.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, -21)
+scale = Vector2(2.1, 2.1)
+texture = ExtResource("2_iwfgu")
+hframes = 12
+vframes = 5
+frame = 13
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(-1, 5)
+shape = SubResource("CapsuleShape2D_1vkcq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_fo3xi")
+}
+
+[node name="HurtBox" parent="." instance=ExtResource("3_36ivu")]
+visible = false
+collision_mask = 4
+HurtBoxType = 1
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(-4.5, 2)
+shape = SubResource("RectangleShape2D_i6wvv")
+
+[node name="HitBox" parent="." instance=ExtResource("4_pwhmg")]
+visible = false
+position = Vector2(-3, 24)
+collision_layer = 2
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(-1, -22.5)
+shape = SubResource("RectangleShape2D_3efym")
+
+[node name="DisableHitBoxTimer" parent="HitBox" index="1"]
+wait_time = 0.1
+
+[node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_oucek")
+volume_db = -10.0
+pitch_scale = 1.2
+
+[connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
+
+[editable path="HurtBox"]
+[editable path="HitBox"]

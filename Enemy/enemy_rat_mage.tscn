@@ -1,0 +1,193 @@
+[gd_scene load_steps=16 format=3 uid="uid://d2f4nvx0qxmf8"]
+
+[ext_resource type="Script" path="res://Enemy/enemy_rat_mage.gd" id="1_ija47"]
+[ext_resource type="Texture2D" uid="uid://4j7tjso0di5" path="res://Enemy/Ratfolk Mage Sprite Sheet.png" id="2_eedrh"]
+[ext_resource type="PackedScene" uid="uid://cba13sump0qlj" path="res://Utility/hurt_box.tscn" id="3_6d0q3"]
+[ext_resource type="PackedScene" uid="uid://c6ango5v6ufdx" path="res://Utility/hit_box.tscn" id="4_1v1n3"]
+[ext_resource type="AudioStream" uid="uid://ddax7tmqqapp" path="res://Sound/enemyHit.mp3" id="5_prd2i"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_1vkcq"]
+radius = 7.0
+height = 14.0
+
+[sub_resource type="Animation" id="Animation_570ql"]
+length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_5vy8p"]
+resource_name = "attacking"
+length = 0.9
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [16, 17, 18, 19, 20, 21]
+}
+
+[sub_resource type="Animation" id="Animation_imso5"]
+resource_name = "casting"
+length = 1.2
+loop_mode = 1
+step = 0.2
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.2, 0.4, 0.6, 0.8, 1),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [24, 25, 26, 27, 28, 29]
+}
+
+[sub_resource type="Animation" id="Animation_7hnei"]
+resource_name = "idle"
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 1,
+"values": [0]
+}
+
+[sub_resource type="Animation" id="Animation_oghoh"]
+resource_name = "walking"
+length = 0.8
+loop_mode = 1
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sprite2D:frame")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7),
+"transitions": PackedFloat32Array(1, 1, 1, 1, 1, 1, 1, 1),
+"update": 1,
+"values": [9, 10, 11, 12, 13, 14, 15, 16]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_fo3xi"]
+_data = {
+"RESET": SubResource("Animation_570ql"),
+"attacking": SubResource("Animation_5vy8p"),
+"casting": SubResource("Animation_imso5"),
+"idle": SubResource("Animation_7hnei"),
+"walking": SubResource("Animation_oghoh")
+}
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i6wvv"]
+size = Vector2(31, 24)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_3efym"]
+size = Vector2(24, 18)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_i3hyw"]
+radius = 260.0
+
+[node name="enemy_rat_mage" type="CharacterBody2D"]
+collision_layer = 5
+collision_mask = 5
+motion_mode = 1
+script = ExtResource("1_ija47")
+projectile_amount = 3
+projectile_speed = 100
+projectile_cooldown = 3
+enemy_radius = 310
+movement_speed = 22.0
+hp = 20
+experience = 10
+knockback_recovery = 5.0
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+position = Vector2(1, -14)
+scale = Vector2(1.5, 1.5)
+texture = ExtResource("2_eedrh")
+hframes = 8
+vframes = 6
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+visible = false
+position = Vector2(1, -1)
+shape = SubResource("CapsuleShape2D_1vkcq")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="."]
+libraries = {
+"": SubResource("AnimationLibrary_fo3xi")
+}
+
+[node name="HurtBox" parent="." instance=ExtResource("3_6d0q3")]
+visible = false
+collision_mask = 4
+HurtBoxType = 1
+
+[node name="CollisionShape2D" parent="HurtBox" index="0"]
+position = Vector2(2.5, -2)
+shape = SubResource("RectangleShape2D_i6wvv")
+
+[node name="HitBox" parent="." instance=ExtResource("4_1v1n3")]
+visible = false
+position = Vector2(-2, 22)
+collision_layer = 2
+
+[node name="CollisionShape2D" parent="HitBox" index="0"]
+position = Vector2(4, -23)
+shape = SubResource("RectangleShape2D_3efym")
+
+[node name="DisableHitBoxTimer" parent="HitBox" index="1"]
+wait_time = 0.1
+
+[node name="PlayerDetection" type="Area2D" parent="."]
+visible = false
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="PlayerDetection"]
+shape = SubResource("CircleShape2D_i3hyw")
+debug_color = Color(0.403922, 0.423529, 0.686275, 0.419608)
+
+[node name="snd_hit" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("5_prd2i")
+volume_db = -10.0
+pitch_scale = 1.2
+
+[node name="Attack" type="Timer" parent="."]
+wait_time = 2.5
+one_shot = true
+
+[node name="ProjectileCooldown" type="Timer" parent="Attack"]
+wait_time = 0.5
+one_shot = true
+
+[connection signal="remove_after" from="." to="." method="_on_remove_after"]
+[connection signal="hurt" from="HurtBox" to="." method="_on_hurt_box_hurt"]
+[connection signal="body_entered" from="PlayerDetection" to="." method="_on_player_detection_body_entered"]
+[connection signal="body_exited" from="PlayerDetection" to="." method="_on_player_detection_body_exited"]
+[connection signal="timeout" from="Attack" to="." method="_on_attack_timeout"]
+[connection signal="timeout" from="Attack/ProjectileCooldown" to="." method="_on_projectile_cooldown_timeout"]
+
+[editable path="HurtBox"]
+[editable path="HitBox"]
