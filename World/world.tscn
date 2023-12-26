@@ -1,0 +1,115 @@
+[gd_scene load_steps=23 format=3 uid="uid://ckhgx1nlgmtn3"]
+
+[ext_resource type="Texture2D" uid="uid://cykwedxdt7njh" path="res://World/snow3.bmp" id="1_qnjas"]
+[ext_resource type="PackedScene" uid="uid://ch556t4ixgn4e" path="res://Player/player.tscn" id="2_vsx8c"]
+[ext_resource type="PackedScene" uid="uid://bh8td075qqc8q" path="res://Utility/enemy_spawner.tscn" id="4_3h66e"]
+[ext_resource type="PackedScene" uid="uid://cj3rkoxrtkblk" path="res://Enemy/enemy_dragon.tscn" id="4_p7ehi"]
+[ext_resource type="Script" path="res://Utility/spawn_info.gd" id="5_kx6th"]
+[ext_resource type="PackedScene" uid="uid://c07lwhck7hlad" path="res://Enemy/enemy_rat.tscn" id="6_rbcdj"]
+[ext_resource type="Script" path="res://World/sndtrack.gd" id="6_tl0y5"]
+[ext_resource type="AudioStream" uid="uid://d2fj2xf3buybo" path="res://Sound/mainSoundtrack.mp3" id="6_wjjb0"]
+[ext_resource type="PackedScene" uid="uid://m682riev4vew" path="res://Enemy/enemy_ghoul.tscn" id="7_40rp0"]
+[ext_resource type="PackedScene" uid="uid://4h0setjvfyxi" path="res://Utility/frame_saver.tscn" id="8_htoa8"]
+[ext_resource type="PackedScene" uid="uid://dch0dcxlpi6qw" path="res://Enemy/enemy_hedgehog.tscn" id="8_pldwb"]
+[ext_resource type="PackedScene" uid="uid://d2f4nvx0qxmf8" path="res://Enemy/enemy_rat_mage.tscn" id="9_yrst8"]
+[ext_resource type="PackedScene" uid="uid://bb3cc6wljpfxe" path="res://Enemy/enemy_cyclop.tscn" id="10_akutk"]
+
+[sub_resource type="Resource" id="Resource_qsqd0"]
+script = ExtResource("5_kx6th")
+time_start = 0
+time_end = 30
+enemy = ExtResource("4_p7ehi")
+enemy_num = 1
+enemy_spawn_delay = 0
+
+[sub_resource type="Resource" id="Resource_dl7u8"]
+script = ExtResource("5_kx6th")
+time_start = 30
+time_end = 120
+enemy = ExtResource("4_p7ehi")
+enemy_num = 3
+enemy_spawn_delay = 1
+
+[sub_resource type="Resource" id="Resource_oquh5"]
+script = ExtResource("5_kx6th")
+time_start = 60
+time_end = 180
+enemy = ExtResource("6_rbcdj")
+enemy_num = 4
+enemy_spawn_delay = 2
+
+[sub_resource type="Resource" id="Resource_ermy8"]
+script = ExtResource("5_kx6th")
+time_start = 140
+time_end = 220
+enemy = ExtResource("7_40rp0")
+enemy_num = 3
+enemy_spawn_delay = 1
+
+[sub_resource type="Resource" id="Resource_s6nuc"]
+script = ExtResource("5_kx6th")
+time_start = 45
+time_end = 145
+enemy = ExtResource("8_pldwb")
+enemy_num = 3
+enemy_spawn_delay = 4
+
+[sub_resource type="Resource" id="Resource_hwsyb"]
+script = ExtResource("5_kx6th")
+time_start = 220
+time_end = 360
+enemy = ExtResource("9_yrst8")
+enemy_num = 3
+enemy_spawn_delay = 10
+
+[sub_resource type="Resource" id="Resource_16epi"]
+script = ExtResource("5_kx6th")
+time_start = 260
+time_end = 380
+enemy = ExtResource("7_40rp0")
+enemy_num = 4
+enemy_spawn_delay = 2
+
+[sub_resource type="Resource" id="Resource_n2cmy"]
+script = ExtResource("5_kx6th")
+time_start = 300
+time_end = 420
+enemy = ExtResource("10_akutk")
+enemy_num = 4
+enemy_spawn_delay = 3
+
+[sub_resource type="Resource" id="Resource_4swnq"]
+script = ExtResource("5_kx6th")
+time_start = 290
+time_end = 420
+enemy = ExtResource("9_yrst8")
+enemy_num = 4
+enemy_spawn_delay = 5
+
+[node name="World" type="Node2D"]
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+texture_filter = 1
+texture_repeat = 2
+texture = ExtResource("1_qnjas")
+region_enabled = true
+region_rect = Rect2(-4000, -4000, 4000, 4000)
+
+[node name="player" parent="." instance=ExtResource("2_vsx8c")]
+position = Vector2(155, 123)
+
+[node name="EnemySpawner" parent="." instance=ExtResource("4_3h66e")]
+spawns = Array[ExtResource("5_kx6th")]([SubResource("Resource_qsqd0"), SubResource("Resource_dl7u8"), SubResource("Resource_oquh5"), SubResource("Resource_ermy8"), SubResource("Resource_s6nuc"), SubResource("Resource_hwsyb"), SubResource("Resource_16epi"), SubResource("Resource_n2cmy"), SubResource("Resource_4swnq")])
+
+[node name="Loot" type="Node" parent="." groups=["loot"]]
+
+[node name="sndtrack" type="AudioStreamPlayer" parent="."]
+process_mode = 3
+stream = ExtResource("6_wjjb0")
+volume_db = -17.5
+autoplay = true
+script = ExtResource("6_tl0y5")
+
+[node name="FrameSaver" parent="." instance=ExtResource("8_htoa8")]
+
+[connection signal="player_death" from="player" to="sndtrack" method="_on_player_player_death"]
