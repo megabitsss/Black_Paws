@@ -1,0 +1,126 @@
+[gd_scene load_steps=14 format=3 uid="uid://w6ioe7q6405q"]
+
+[ext_resource type="FontFile" uid="uid://civig6trvagaf" path="res://GUI/monogram-extended.ttf" id="1_pquye"]
+[ext_resource type="Script" path="res://TitleScreen/menu.gd" id="1_tjwcd"]
+[ext_resource type="Texture2D" uid="uid://do34hhyjn76xm" path="res://TitleScreen/snowing.png" id="2_nqe28"]
+[ext_resource type="PackedScene" uid="uid://cqtmpc66o8pnt" path="res://Utility/basic_button.tscn" id="3_tne3h"]
+[ext_resource type="Texture2D" uid="uid://c3bmauko1qluw" path="res://Player/Cat-2-Walk.png" id="4_2nuo5"]
+[ext_resource type="Texture2D" uid="uid://dwmpkrunfuy81" path="res://GUI/Items/hat3.png" id="4_t23ew"]
+[ext_resource type="AudioStream" uid="uid://b3f67w7wxj0gd" path="res://Sound/menuSnd.mp3" id="7_gvcmv"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1tlfk"]
+atlas = ExtResource("2_nqe28")
+region = Rect2(0, 0, 421, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_o8rq0"]
+atlas = ExtResource("2_nqe28")
+region = Rect2(421, 0, 421, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_db3cb"]
+atlas = ExtResource("2_nqe28")
+region = Rect2(842, 0, 421, 225)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_0pip7"]
+atlas = ExtResource("2_nqe28")
+region = Rect2(1263, 0, 421, 225)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_v3m3a"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1tlfk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_o8rq0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_db3cb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_0pip7")
+}],
+"loop": true,
+"name": &"main",
+"speed": 4.0
+}]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_17duf"]
+atlas = ExtResource("4_2nuo5")
+region = Rect2(161, 18, 24, 14)
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_tjwcd")
+
+[node name="ColorRect" type="ColorRect" parent="."]
+layout_mode = 0
+offset_right = 648.0
+offset_bottom = 369.0
+color = Color(0.0784314, 0.419608, 0.227451, 1)
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+modulate = Color(0.831373, 0.831373, 0.831373, 1)
+position = Vector2(328, 180)
+scale = Vector2(1.55523, 1.79222)
+sprite_frames = SubResource("SpriteFrames_v3m3a")
+animation = &"main"
+frame_progress = 0.702783
+
+[node name="Label" type="Label" parent="."]
+layout_mode = 0
+offset_right = 640.0
+offset_bottom = 100.0
+theme_override_fonts/font = ExtResource("1_pquye")
+theme_override_font_sizes/font_size = 92
+text = "Black Paws"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="BlackCat" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 20.0
+offset_top = 320.0
+offset_right = 68.0
+offset_bottom = 348.0
+scale = Vector2(1.5, 1.5)
+texture = SubResource("AtlasTexture_17duf")
+
+[node name="Hat" type="TextureRect" parent="."]
+texture_filter = 2
+layout_mode = 0
+offset_left = 117.0
+offset_top = 24.0
+offset_right = 518.0
+offset_bottom = 412.0
+rotation = -0.518363
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("4_t23ew")
+flip_h = true
+
+[node name="button_play" parent="." instance=ExtResource("3_tne3h")]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 220.0
+offset_right = 360.0
+offset_bottom = 250.0
+text = "Play"
+
+[node name="button_exit" parent="." instance=ExtResource("3_tne3h")]
+layout_mode = 0
+offset_left = 280.0
+offset_top = 260.0
+offset_right = 360.0
+offset_bottom = 290.0
+text = "Exit"
+
+[node name="MenuSoundtrack" type="AudioStreamPlayer" parent="."]
+stream = ExtResource("7_gvcmv")
+volume_db = -15.0
+
+[connection signal="click_end" from="button_play" to="." method="_on_button_play_click_end"]
+[connection signal="click_end" from="button_exit" to="." method="_on_button_exit_click_end"]

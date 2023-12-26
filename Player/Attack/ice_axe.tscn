@@ -1,0 +1,61 @@
+[gd_scene load_steps=6 format=3 uid="uid://cdj25yhh3f8og"]
+
+[ext_resource type="Texture2D" uid="uid://c5qlyq5n7brk1" path="res://Player/Attack/iceAxe.png" id="1_8yd6f"]
+[ext_resource type="Script" path="res://Player/Attack/ice_axe.gd" id="1_45mmy"]
+[ext_resource type="AudioStream" uid="uid://coynowwg0uqpq" path="res://Sound/tornadoSound.mp3" id="3_o7u8w"]
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_8rehc"]
+animations = [{
+"frames": [],
+"loop": true,
+"name": &"attack",
+"speed": 5.0
+}, {
+"frames": [],
+"loop": true,
+"name": &"idle",
+"speed": 5.0
+}]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_8fpnn"]
+size = Vector2(350.5, 340)
+
+[node name="iceAxe" type="Area2D" groups=["attack"]]
+top_level = true
+collision_layer = 4
+collision_mask = 0
+script = ExtResource("1_45mmy")
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="."]
+sprite_frames = SubResource("SpriteFrames_8rehc")
+animation = &"attack"
+
+[node name="Sprite2D" type="Sprite2D" parent="."]
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("1_8yd6f")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+position = Vector2(-0.525001, 1.19209e-07)
+scale = Vector2(0.1, 0.1)
+shape = SubResource("RectangleShape2D_8fpnn")
+disabled = true
+
+[node name="AttackTimer" type="Timer" parent="."]
+wait_time = 5.0
+one_shot = true
+autostart = true
+
+[node name="ChangeDirection" type="Timer" parent="."]
+
+[node name="ResetPostTimer" type="Timer" parent="."]
+wait_time = 3.0
+autostart = true
+
+[node name="snd_attack" type="AudioStreamPlayer2D" parent="."]
+stream = ExtResource("3_o7u8w")
+volume_db = -10.0
+pitch_scale = 1.5
+
+[connection signal="timeout" from="AttackTimer" to="." method="_on_attack_timer_timeout"]
+[connection signal="timeout" from="ChangeDirection" to="." method="_on_change_direction_timeout"]
+[connection signal="timeout" from="ResetPostTimer" to="." method="_on_reset_post_timer_timeout"]

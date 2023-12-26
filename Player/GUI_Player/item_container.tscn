@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3 uid="uid://4ura8tw7jdcx"]
+
+[ext_resource type="Texture2D" uid="uid://ceqls371k8xdh" path="res://GUI/EmptyItem.png" id="1_dfubh"]
+[ext_resource type="Script" path="res://Player/GUI_Player.gd" id="2_hdkl6"]
+[ext_resource type="Texture2D" uid="uid://kb1n53gj5gq3" path="res://GUI/Items/candy_cane.png" id="2_i57n7"]
+
+[node name="ItemContainer" type="TextureRect"]
+offset_right = 12.0
+offset_bottom = 12.0
+texture = ExtResource("1_dfubh")
+script = ExtResource("2_hdkl6")
+
+[node name="ItemTexture" type="TextureRect" parent="."]
+layout_mode = 0
+offset_left = 1.0
+offset_top = 1.0
+offset_right = 33.0
+offset_bottom = 33.0
+scale = Vector2(0.3, 0.3)
+texture = ExtResource("2_i57n7")
+expand_mode = 2
